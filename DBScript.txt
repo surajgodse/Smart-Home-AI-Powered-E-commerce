@@ -1,0 +1,42 @@
+-- Create Database
+CREATE DATABASE HW4_SmartHomes;
+USE HW4_SmartHomes;
+
+-- Create Users Table
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    usertype ENUM('customer', 'retailer', 'manager') NOT NULL DEFAULT 'customer',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create Orders Table (we'll need this later for the buy functionality)
+CREATE TABLE orders (
+    orderId INT AUTO_INCREMENT PRIMARY KEY,
+    userId INT NOT NULL,
+    productId VARCHAR(100) NOT NULL,
+    productName VARCHAR(100) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    discount DECIMAL(5, 2) NOT NULL,
+    finalPrice DECIMAL(10, 2) NOT NULL,
+    quantity INT NOT NULL DEFAULT 1,
+    customerName VARCHAR(100) NOT NULL,
+    customerAddress TEXT NOT NULL,
+    creditAccountNo VARCHAR(50) NOT NULL,
+    deliveryType ENUM('delivery', 'inStore') NOT NULL,
+    storeLocation VARCHAR(100),
+    orderDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES users(id)
+);
+
+
+CREATE TABLE support_tickets (
+    ticket_id VARCHAR(10) PRIMARY KEY,
+    user_id INT,
+    description TEXT,
+    image_path VARCHAR(255),
+    ai_decision ENUM('Refund Order', 'Replace Order', 'Escalate to Human Agent'),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
